@@ -1,5 +1,5 @@
 package com.async;
-
+//我改过了哟
 public enum EventType {
 	LIKE(0),
 	COMMENT(1),

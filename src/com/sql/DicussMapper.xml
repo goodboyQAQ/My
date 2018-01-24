@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+	"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+	
+<mapper namespace="com.dao.DicussDao">
+	
+	<insert id="save" parameterType="com.entity.Dicuss">
+		insert into dicuss(user_id,nick_name,user_img,opus_id,send_type,send_floor,msg,to_userid,to_nickname)
+		values(#{userId},#{nickName},#{userImg},#{opusId},#{sendType},#{sendFloor},#{msg},#{toUser},#{toNickName})
+	</insert>
+		
+	<!-- 查找所有[评论][回复]的数量 -->
+	<select id="findCount"  resultType="java.lang.Integer">
+		SELECT count(*)
+		FROM dicuss
+		<where>
+			opus_id=#{opusId}
+			<if test="sendType!=null">
+				and send_type=#{sendType}
+			</if>
+			<if test="sendFloor!=null">
+				and send_floor=#{sendFloor}
+			</if>
+		</where>	
+	</select>
+	
+	<!-- 按楼层升序显示评论  每次8条-->
+	<select id="updicuss0" resultMap="dicussMap">
+		select* from dicuss
+		where opus_id=#{opusId}
+			and send_type=0
+		order by send_floor
+		limit #{n},8
+	</select>
+	
+	<!-- 按回复数量降序显示评论   每次显示8条-->
+	<select id="maxdicuss0" resultMap="dicussMap">
+		select*,count(send_floor) from dicuss
+		where opus_id=#{opusId}
+		GROUP BY send_floor 
+		order by count(send_floor) DESC
+		limit #{n},8
+	</select>
+	
+	<!-- 降序显示回复   每次显示5条-->
+	<select id="downreply" resultMap="dicussMap">
+		select* from dicuss
+		where opus_id=#{opusId}
+			and send_type=1
+			and send_floor=#{sendFloor}
+		order by send_time DESC
+		limit #{n},5
+	</select>
+	
+	<select id="floor" resultType="java.lang.Integer">
+		select Max(send_floor)
+		from dicuss
+		where opus_id=#{opusId}
+	</select>
+	
+	
+	<resultMap id="dicussMap" type="com.entity.Dicuss" >
+		<id property="id" column="id"/>
+		<result property="opusId" column="opus_id"/>
+		<result property="userId" column="user_id"/>
+		<result property="nickName" column="nick_name"/>
+		<result property="userImg" column="user_img"/>
+		<result property="sendTime" column="send_time"/>
+		<result property="sendFloor" column="send_floor"/>
+		<result property="toNickName" column="to_nickname"/>
+		<result property="toUser" column="to_userid"/>
+		<result property="msg" column="msg"/>
+	</resultMap>
+	
+</mapper>

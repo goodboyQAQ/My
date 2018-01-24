@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+	"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+	
+<mapper namespace="com.dao.UserDao">
+	
+	<insert id="save" parameterType="com.entity.Dicuss">
+		insert into user(user_name,nick_name,pass_word,tel)
+		values(#{userName},#{nickName},#{password},#{tel})
+	</insert>
+	
+	<select id="login" resultMap="userMap">
+		select* from user
+		where pass_word=#{password} and
+		 (user_name=#{name} or tel=#{name} or email=#{name})	
+	</select>	
+	
+	<select id="findById" resultMap="userMap">
+		select* from user
+		where user_id=#{userId}	
+	</select>
+	
+	<select id="findByName" resultMap="userMap">
+		select* from user
+		where user_name=#{userName} or email=#{userName} or tel=#{userName}
+	</select>
+	
+	
+	
+	<resultMap id="userMap" type="com.entity.User" >
+		<id property="userId" column="user_id"/>
+		<result property="userName" column="user_name"/>
+		<result property="nickName" column="nick_name"/>
+		<result property="tel" column="tel"/>
+		<result property="password" column="pass_word"/>
+		<result property="userImg" column="user_img"/>
+	</resultMap>
+	
+</mapper>

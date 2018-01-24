@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8"/>
+    
+    <style type="text/css">
+    	*{
+    		margin:0;
+    		padding:0;
+    	}
+    	#zhuti{
+    		border-bottom:1px solid gray;
+    		height:25px;
+    		text-align:center;
+    		margin:0 0 30px 0;
+    	}
+    	#zhuti span{		
+    		background-color:white;
+    		font-size:40px;
+    	}
+    	#body{
+    		width:650px;
+    		margin:0 auto;
+    	}
+    	input{
+    		padding:0 5px;
+    		height:40px;
+    		width:400px;
+    		font-size:15px;
+    		color:gray;
+    		margin:20px 0;
+    	}
+    	
+    	select{
+    		width:100px;
+    		height:44px;
+    	}
+    	#tel_code{
+    		 background-color:#03999d;
+    		 color:white;
+    		 border:0;
+    		 width:100px;
+    		 height:44px;
+    	}
+    	form span{
+ 
+    		display:inline-block;
+    		width:200px;
+    		color:red;
+    	}
+    	.safe_img{
+    		display:inline-block;
+    		width:40px;
+    		height:5px;
+    		border-radius:25px;
+    		margin:0 0 0 30px;
+    		vertical-align:middle; 
+    		visibility:hidden;
+    	}
+    	#safe{
+    		display:none;
+    	}
+    </style>
+    
+    <script type="text/javascript" src="js/jquery-1.11.1.js"></script> 
+    <script type="text/javascript" src="js/cookieUtil.js"></script> 
+	<script type="text/javascript">
+		function agree(){
+			if(document.getElementById("cb").checked){
+				document.getElementById("sub").disabled=false;
+				document.getElementById("sub").style.backgroundColor="#03999d";
+				document.getElementById("sub").style.color="white";
+			}else{
+				document.getElementById("sub").disabled="disabled";
+				document.getElementById("sub").style.backgroundColor="";
+				document.getElementById("sub").style.color="";
+			}
+		}
+		
+		
+		
+		var c_nn;
+		var c_pw;
+		var c_tel;
+		
+		var check_nn=function(){
+			c_nn=false;
+			var userName=$("#userName").val().trim();
+			var ok=false;
+			$("#userName_msg").html("");
+			if(userName.length==0){
+				$("#userName_msg").html("");
+				ok=false;
+			}
+			else if(userName.length<=3 && userName.length>0){
+				$("#userName_msg").html("昵称过短");
+				ok=false;
+			}
+			else if(userName.length>10){
+				$("#userName_msg").html("昵称过长");
+				ok=false;
+			}else{
+			    ok=true;
+			}
+			//长度符合可以开始查找数据库是否有重名了
+			if(ok){
+				$.ajax({
+		 			url:"http://localhost:8888/Bilibili/user/findbyname.do",
+		  			type:"post",
+		  			data:{"username":userName},
+		 			dataType:"json",
+		 			success:function(result){
+		 				if(result.status==0){ 
+		 				alert(result.status);
+			 			$("#userName_msg").html(result.msg);
+			 			c_nn=true;
+			 			}else{
+			 				alert(result.status);
+			 				$("#userName_msg").html(result.msg);
+			 			}
+		 			 },
+				    error:function(){
+			 			alert("查找失败");
+		 			}
+				});
+			}
+		}
+		var check_pw=function(){
+			c_pw=false;
+			$("#password_msg").html("");
+			$("#safe").css("display","block");
+			$(".safe_img").css("visibility","hidden");
+			$("#safe_msg").html("");
+			var pw=$("#password").val().trim().length;
+			if(pw<5 &&pw>0){
+				$("#password_msg").html("密码长度过短");
+			}else if(pw>20){
+				$("#password_msg").html("密码长度过长");
+			}else if(pw>=5 &&pw<=20){
+				$("#password_msg").html("通过");
+				c_pw=true;
+			}
+			if($("#password").val().trim().length>0){
+				$(".safe_img:eq(0)").css("visibility","visible");
+				$("#safe_msg").html("低");
+			}
+			if($("#password").val().trim().length>7){
+				$(".safe_img:eq(1)").css("visibility","visible");
+				$("#safe_msg").html("中");
+			}
+			if($("#password").val().trim().length>15){
+				$(".safe_img:eq(2)").css("visibility","visible");
+				$("#safe_msg").html("高");
+			}
+		}
+		var check_tel=function(){
+		  c_tel=false;
+		  $("#tel_msg").html("");
+		  if($("#tel").val().trim().length!=11){
+		  	$("#tel_msg").html("请确认手机号码");
+		  }else{
+		  	$("#tel_msg").html("通过");
+		  	c_tel=true;
+		  }
+		}
+		var check=function(){
+			var userName=$("#userName").val().trim();
+			var password=$("#password").val().trim();
+			var tel=$("#tel").val().trim();
+			if(c_nn==true && c_pw==true && c_tel==true){
+				$.ajax({
+					url:"http://localhost:8888/Bilibili/user/add.do",
+		  			type:"post",
+		  			data:{"userName":userName,"password":password,"tel":tel},
+		 			dataType:"json",
+		 			async:false,
+		 			success:function(result){
+		 				alert("aaa");
+		 			 },
+				    error:function(){
+			 			alert("成功");
+		 			}
+				
+				});
+				alert("接下来");
+				$.ajax({
+					url:"http://localhost:8888/Bilibili/user/findbyname.do",
+		  			type:"post",
+		  			data:{"username":userName},
+		 			dataType:"json",
+		 			async:false,
+		 			success:function(result){
+		 				var user=result.data;
+		 				var userId=user.userId;
+		 				var nickName=user.nickName;
+		 				var userImg=user.userImg;
+		 				alert("要开始用cookie了"+userId+" "+nickName+" "+userImg)
+		 				setCookie("userId",userId,2);
+ 						setCookie("nickName",nickName,2);
+ 						setCookie("userImg",userImg,2);
+ 						window.location.href="homePage/HomePage.jsp";
+		 			 },
+				    error:function(){
+			 			alert("成功");
+		 			}
+				
+				});
+				
+			}else{
+			  alert("请检查输入");
+			}
+		}
+		
+		
+			
+	</script>
+  </head>
+  
+  <body>
+    <div>
+    	<div id="top"></div>
+    	<div id="body">
+    		
+    		<div id="zhuti">
+    			<span><b>注册</b></span>  
+    		</div> 	
+    		
+	    		<input type="text" id="userName" name="userName" placeholder="用户名（例：哔哩哔哩）" oninput="check_nn()"/>
+	    		<span id="userName_msg"></span><br/>
+	    		
+	    		<input type="password" id="password" name="password" placeholder="密码（6-16个字符组成，区分大小写）" oninput="check_pw()"/>
+	    		<span id="password_msg"></span><br/>
+	    		
+	    		<div id="safe" style="margin:-10px 0 20px 0;">
+	    			<b style="vertical-align:middle; ">安全系数</b>
+	    			<div class="safe_img" style="background-color:green"></div>
+	    			<div class="safe_img" style="background-color:blue"></div>
+	    			<div class="safe_img" style="background-color:red"></div>
+	    			<span id="safe_msg" style="margin:0 0 0 20px;font-size:20px;"></span>
+	    		</div>
+	    		
+	    		<select name="country">
+	    			<option value="0000">中国</option>
+	    			<option value="1111">日本</option>
+	    			<option value="2222">美国</option>
+	    			<option value="3333">韩国</option>
+	    			<option value="4444">英国</option>
+	    			<option value="5555">加拿大</option>
+	    		</select>
+	    		<input name="tel"  id="tel" type="text" placeholder="填写常用手机号" style="width:290px" onblur="check_tel()"/>
+	    		<span id="tel_msg"></span><br/>
+	    		
+	    		<input name="tel_code" type="text" placeholder="手机验证码" style="width:290px"/>
+	    		<input type="button" id="tel_code" value="点击获取" style="background-color:#03999d;color:white;border:0"/>
+	    		<br/>
+	    		
+	    		<label>
+		    		<input type="checkbox" id="cb" name="checkbox" value="sure" style="height:15px;width:15px" onclick="agree();"/>我已同意 
+		    		<a href="http://www.baidu.com"  style="text-decoration:none;color:blue">协议</a>
+	    		</label>
+	    		<br/>
+	    		
+	    		<input type="button" id="sub" value="注册" disabled="disabled" onclick="check();"/>
+
+    	</div>
+
+    </div>
+  </body>
+</html>

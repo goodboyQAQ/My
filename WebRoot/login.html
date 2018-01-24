@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <style type="text/css">
+    #d1{
+    		background-color:#03999d;
+    		height:50px;
+    		width:550px;
+    		font-size:25px;
+    		line-height:50px;
+    	}
+    	#d2{
+    		background-color:#ececf0;
+    		height:200px;
+    		width:550px;
+    	}
+    	p{
+    		margin:0 0 0 40px;
+    		color:#fff;
+    	}
+    	span{
+    		margin:0 0 0 60px;
+    		color:#03999d;
+    	}
+    	#count{
+    		margin:20px 0 0 0;
+    		padding:5px 40px 5px 40px; 
+    		border:1px solid #03999d;
+    	}
+    	#password{
+    		margin:20px 0 0 0;
+    		padding:5px 40px 5px 40px;
+    		border:1px solid #03999d;
+    	}
+    	#login{
+    		margin:20px 0 0 60px;
+    		padding:5px 40px 5px 40px; 
+    		color:#03999d;
+    		border:1px solid #03999d;
+    	}
+    	#sig_in{
+    		padding:5px 40px 5px 40px; 
+    		margin:20px 0 0 35px;
+    		color:#03999d;
+    		border:1px solid #03999d;
+    	} 
+    	
+
+    </style>
+    <script type="text/javascript" src="js/jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="js/cookieUtil.js"></script>
+    <script type="text/javascript" src="js/login.js"></script>
+    
+ 		<script type="text/javascript">
+ 			$(function(){
+ 			alert("a");
+ 				//给单击按钮追加处理
+ 				$("#login").click(function(){
+ 				    var name=$("#count").val().trim();
+ 					var password=$("#password").val().trim();
+ 					$("#count_msg").html("");
+ 					$("#password_msg").html("");
+ 					var ok=true;
+ 					if(name==""){
+ 						$("#count_msg").html("用户名不能为空");
+ 						ok=false;
+ 					}
+ 					if(password==""){
+ 						$("#password_msg").html("密码不能为空");
+ 						
+ 					}
+
+ 					if(ok){
+ 						$.ajax({
+ 						url:"http://localhost:8888/Bilibili/user/login.do",
+ 						type:"post",
+ 						data:{"name":name,"password":password},
+ 						dataType:"json",
+ 						success:function(result){
+ 							//result是服务器返回的json结果
+ 							if(result.status==0){
+ 								//获取用户ID，写入cookie
+ 								var user=result.data;
+ 								var userId=user.userId;
+ 								var nickName=user.nickName;
+ 								var userImg=user.userImg;
+ 								alert("登陆成功"+userId+" "+nickName+" "+userImg);
+ 								setCookie("userId",userId,2);
+ 								setCookie("nickName",nickName,2);
+ 								setCookie("userImg",userImg,2);//存储两小时
+ 								//返回之前的页面
+ 								window.history.go(-1);
+ 								window.location.reload();
+ 							}else if(result.status==1){//用户名错
+ 								$("#count_msg").html(result.msg);
+ 							}else if(result.status==2){//密码错
+ 								$("#password_msg").html(result.msg);
+ 							}
+ 						},
+ 						error:function(){
+ 							alert("登陆发生异常");
+ 						}
+ 					});
+ 					}
+ 				});
+ 				
+ 				$("#sig_in").click(function(){
+ 					window.location.href="register.html";
+ 				});
+ 				
+ 			});
+ 		</script>
+ 
+ 
+  </head>
+  <body>
+  	<div id="d1">
+  		<p>登录</p>
+  	</div>
+  	<div id="d2">
+  		<span>用户名：</span>
+  		<input type="text" id="count"/><br/>
+  		<span id="count_msg"></span></br>
+  		
+  		<span>密&nbsp;码：</span>
+  		<input type="text" id="password"/><br/>
+  		<span id="password_msg"></span>
+  		
+  		<input type="button" id="login" value="登录">
+  		<input type="button" id="sig_in" value="注册">
+  	</div>
+  </body>
+</html>

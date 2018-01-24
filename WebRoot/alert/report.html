@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<meta charset="utf-8"/>
+	<style type="text/css">
+		#a_report{
+			width:500px;
+			background-color:white;
+			position:fixed;
+			font-size:15px;
+			left:30%;
+			top:30%;
+			z-index:3;
+			padding:0 0 20px 0;
+		}
+		label{			
+			display:inline-block;
+			width:150px;
+		}	
+		.reason_all{
+			margin:0 0 20px 0;
+			padding:0 10px;
+		}
+		.reason_type{
+			color:RGB(150,160,170);
+			padding:0 10px;
+		}
+		.bo{
+			display:inline-block;
+			line-height:30px;
+			padding:0 30px;
+			border-radius:5px;
+		}
+		#back{
+			border:1px solid RGB(230,230,230);
+		}
+		#ok{
+			background-color:RGB(0,170,230);
+		}
+		#bu{
+			margin:0 auto;
+			width:200px;
+		}
+	</style>
+  </head>
+  	
+  <body>
+    <div id="a_report">
+    	<div style="font-size:20px;line-height:40px;text-align:center;border-bottom:1px solid RGB(230,230,230)"> 
+    		举报理由
+    		<div class="back" style="float:right">X</div>
+    	</div>
+    	
+    	<div class="reason_type">违反法律法规</div>
+    	<div class="reason_all">
+    		<label><input name="reason" type="radio" value="0"/>违法违规</label>
+    		<label><input name="reason" type="radio" value="1"/>色情</label>
+    		<label><input name="reason" type="radio" value="2"/>低俗</label>
+    		<label><input name="reason" type="radio" value="3"/>赌博诈骗</label>
+    	</div>
+    	
+    	<div class="reason_type">侵犯个人权益</div>
+    	<div class="reason_all">
+    		<label><input name="reason" type="radio" value="4"/>人身攻击</label>
+    		<label><input name="reason" type="radio" value="5"/>侵犯隐私</label>
+    	</div>
+    	
+    	<div class="reason_type">有害社区环境</div>
+    	<div class="reason_all">
+    		<label><input name="reason" type="radio" value="6"/>垃圾广告</label>
+    		<label><input name="reason" type="radio" value="7"/>引战</label>
+    		<label><input name="reason" type="radio" value="8"/>剧透</label>
+    		<label><input name="reason" type="radio" value="9"/>刷屏</label>
+    		<label><input name="reason" type="radio" value="10"/>抢楼</label>
+    		<label><input name="reason" type="radio" value="11"/>视频不相关</label>
+    		<label><input name="reason" type="radio" value="12"/>违法违规</label>  		
+    	</div>
+    	<div class="reason_all">
+    		<label><input name="reason" type="radio" value="13" id="other"/>其他</label><br/>
+    		<textarea class="reason_other" rows="3" placeholder="自定义理由" style="width:400px;display:none"></textarea>
+    	</div>
+    	
+    	<div id="bu">
+    		<div id="back" class="bo back">取消</div>
+    		<div id="ok" class="bo">提交</div>
+    	</div>
+    	
+    </div>
+  </body>
+</html>

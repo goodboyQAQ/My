@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+	"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+	
+<mapper namespace="com.dao.OpusDao">
+	
+	<insert id="save" parameterType="com.entity.Opus">
+		insert into opus(opus_title,opus_time,opus_img,opus_type,opus_type2,tag,collect,coin,click,user_id)
+		values(#{opusTitle},#{opusTime},#{opusImg},#{opusType},#{opusType2},#{tag},#{collect},#{coin},#{click},#{userId})
+	</insert>
+	
+	<select id="select" parameterType="string" resultMap="opusMap">
+		select *
+		from opus
+		where opus_type=#{opusType}
+		order by change_time desc
+		limit 10
+	</select>
+	
+	<select id="selectNew" parameterType="string" resultMap="opusMap">
+		SELECT* FROM opus
+		WHERE opus_type=#{opusType} 
+		ORDER BY create_time DESC limit 10
+	</select>
+	
+	
+	<select id="selectTop" resultMap="opusMap">
+		select* from opus
+		<where>
+			<if test="opusType!=null">
+			 	opus_type=#{opusType}
+			</if>
+			<if test="original!=null">
+			 	and original=#{original}
+			</if>
+			<if test="n!=null">
+				 and to_days(now())-to_days(create_time) &lt;#{n}
+			</if>
+		</where>
+		 ORDER BY (click+coin*10+collect*5) DESC limit 7
+	</select>
+	
+	<select id="selectCount" resultType="java.lang.Integer">
+		select count(*) 
+		from opus
+		where opus_type=#{opusType} 
+			and change_time &gt;= #{time}
+	</select>
+	
+	<select id="selectById" parameterType="int" resultMap="opusMap">
+		select*
+		from opus
+		where opus_id=#{opusId}
+	</select>
+	
+	<select id="selectByUser" parameterType="int" resultMap="opusMap">
+		select*
+		from opus
+		where user_id=#{opusId}
+	</select>
+	
+	
+	
+	
+	<resultMap id="opusMap" type="com.entity.Opus">
+		<id property="opusId" column="opus_id"/>
+		<result property="opusTitle" column="opus_title"/>
+		<result property="opusTime" column="opus_time"/>
+		<result property="opusImg" column="opus_img"/>
+		<result property="opusType" column="opus_type"/>
+		<result property="opusType2" column="opus_type2"/>
+		<result property="original" column="original"/>
+		<result property="tag" column="tag"/>
+		<result property="collect" column="collect"/>
+		<result property="coin" column="coin"/>
+		<result property="click" column="click"/>
+		<result property="userId" column="user_id"/>
+	</resultMap>
+	
+</mapper>

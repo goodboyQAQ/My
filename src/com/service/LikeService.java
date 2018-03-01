@@ -1,17 +1,22 @@
 package com.service;
 
-import java.util.Set;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.async.EventModel;
+import com.async.EventProducer;
+import com.async.EventType;
 import com.util.RedisUtil;
 
 @Service
 public class LikeService {
 	@Resource
 	RedisService redisService;
+	@Resource
+	MsgService msgService;
+	@Resource
+	EventProducer eventProducer;
 	
 	//获取喜欢数量
 	public long getLikeCount(int entityType,int entityId){
@@ -38,16 +43,21 @@ public class LikeService {
 	public long like(int userId,int entityType,int entityId){
 		String likeKey=RedisUtil.getLikeKey(entityType, entityId);
 		redisService.sadd(likeKey,String.valueOf(userId));
-		
+
+		eventProducer.fireEvent(new EventModel(EventType.LIKE).setActorId(userId).setEntityId(entityId));
+
 		String disLikeKey=RedisUtil.getDisLikeKey(entityType, entityId);
 		redisService.srem(disLikeKey,String.valueOf(userId));
-		
+
 		return redisService.scard(likeKey);
 	}
 	//取消点赞
 	public long nolike(int userId,int entityType,int entityId){
 		String likeKey=RedisUtil.getLikeKey(entityType, entityId);
 		redisService.srem(likeKey,String.valueOf(userId));
+
+		eventProducer.fireEvent(new EventModel(EventType.NOLIKE).setActorId(userId).setEntityId(entityId));
+		
 		return redisService.scard(likeKey);
 	}
 	//踩
@@ -57,6 +67,8 @@ public class LikeService {
 		
 		String likeKey=RedisUtil.getLikeKey(entityType, entityId);
 		redisService.srem(likeKey,String.valueOf(userId));
+		
+		eventProducer.fireEvent(new EventModel(EventType.NOLIKE).setActorId(userId).setEntityId(entityId));
 		
 		return redisService.scard(disLikeKey);
 	}

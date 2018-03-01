@@ -4,7 +4,7 @@
 	
 <mapper namespace="com.dao.OpusDao">
 	
-	<insert id="save" parameterType="com.entity.Opus">
+	<insert id="save" parameterType="com.entity.Opus" keyProperty="opusId" useGeneratedKeys="true">
 		insert into opus(opus_title,opus_time,opus_img,opus_type,opus_type2,tag,collect,coin,click,user_id)
 		values(#{opusTitle},#{opusTime},#{opusImg},#{opusType},#{opusType2},#{tag},#{collect},#{coin},#{click},#{userId})
 	</insert>
@@ -56,7 +56,7 @@
 	<select id="selectByUser" parameterType="int" resultMap="opusMap">
 		select*
 		from opus
-		where user_id=#{opusId}
+		where user_id=#{userId}
 	</select>
 	
 	

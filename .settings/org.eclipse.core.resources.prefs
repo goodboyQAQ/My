@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
 encoding//WebRoot/alert/report.html=UTF-8
 encoding//WebRoot/homePage/top.jsp=UTF-8
+encoding//src/com/async/EventConsumer.java=UTF-8
 encoding//src/demo/JDBCdemo.java=UTF-8
 encoding//src/demo/JDBCdemo2.java=UTF-8
 encoding//src/demo/JDBCdemo3.java=UTF-8

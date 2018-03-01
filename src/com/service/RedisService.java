@@ -100,15 +100,33 @@ public class RedisService implements InitializingBean{
 
    public long lpush(String key,String value) {
 	   Jedis jedis=null;
+	   try{
 	   jedis=pool.getResource();
 	   return jedis.lpush(key,value);
+	   }catch(Exception e){
+		   
+	   }finally {
+		   if(jedis!=null){
+	   			 jedis.close();
+	   		}
+	   }
+	   return 0;
 	
    }
 
 public List<String> brpop(int i, String key) {
 	 Jedis jedis=null;
+	 try{
 	 jedis=pool.getResource();
 	 return jedis.brpop(i, key);
+	 }catch(Exception e){
+		 
+	 }finally{
+		 if(jedis!=null){
+   			 jedis.close();
+   		 } 
+	 }
+	 return null;
 }
    
     

@@ -8,13 +8,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.entity.Result;
 import com.service.LikeService;
+import com.service.MsgService;
 
 @Controller
 @RequestMapping("/dicuss")
 public class LikeController {
 	
 	@Resource
-	private LikeService likeService;
+	LikeService likeService;
+	
 	@RequestMapping("/like.do")
 	@ResponseBody
 	public long like(int entityType,int entityId){

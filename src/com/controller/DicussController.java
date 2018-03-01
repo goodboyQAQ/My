@@ -50,7 +50,7 @@ public class DicussController {
 	@RequestMapping("/add.do")
 	@ResponseBody
 	public Result execute4(int userId,String nickName,String userImg,int opusId,String sendType,int sendFloor,String msg,Integer toUser,String toNickName){
-		Result result=dicussService.addDicuss(userId, nickName, userImg, opusId, sendType, sendFloor, msg, toUser, toNickName);
+		Result result=dicussService.addDicuss(userId, nickName, userImg, opusId, sendType, sendFloor, msg, toUser, toNickName); 
 		return result;
 	}
 	
@@ -61,6 +61,20 @@ public class DicussController {
 		return result;
 	}
 	
+
+	@RequestMapping("/findbyid.do")
+	@ResponseBody
+	public Result execute6(int dicussId){
+		Result result=dicussService.findById(dicussId);
+		return result;
+	}
+	
+	@RequestMapping("/findbyfloor.do")
+	@ResponseBody
+	public Result execute7(int opusId,int sendFloor){
+		Result result=dicussService.findByFloor(opusId, sendFloor);
+		return result;
+	}
 	
 }
 

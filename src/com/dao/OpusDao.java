@@ -13,6 +13,6 @@ public interface OpusDao {
 	public List<Map> selectNew(String opusType);
 	public List<Map> selectTop(@Param("opusType")String opusType,@Param("n")String time,@Param("original")String original);
 	public int selectCount(@Param("opusType")String opusType,@Param("time")long time);
-	public List<Map> selectById(int id);
+	public Opus selectById(int id);
 	public List<Map> selectByUser(int useId);
 }

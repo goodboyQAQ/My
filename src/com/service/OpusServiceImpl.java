@@ -69,11 +69,11 @@ public class OpusServiceImpl implements OpusService{
 	}
 
 	public Result findOpusById(int opusId) {
-		List<Map> list=opusDao.selectById(opusId);
+		Opus opus=opusDao.selectById(opusId);
 		Result result=new Result();
 		result.setStatus(0);
 		result.setMsg("≤È—Ø≥…π¶");
-		result.setData(list);
+		result.setData(opus);
 		return result;
 	}
 

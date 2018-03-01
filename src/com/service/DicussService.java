@@ -1,6 +1,5 @@
 package com.service;
 
-import com.entity.Dicuss;
 import com.entity.Result;
 
 public interface DicussService {
@@ -10,4 +9,6 @@ public interface DicussService {
 	public Result maxdicuss0(int opusId,int n);
 	public Result downreply(int opusId,int sendFloor,int n);
 	public Result floor(Integer opusId);
+	public Result findById(int dicussId);
+	public Result findByFloor(int opusId,int sendFloor);
 }

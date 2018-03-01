@@ -45,4 +45,12 @@
 <aop:aspectj-autoproxy/>
 
 
+<mvc:interceptors>
+    <mvc:interceptor>
+        <mvc:mapping path="/dicuss/count.do"/>
+        <bean class="com.interceptor.RemindInterceptor"/>
+    </mvc:interceptor>
+</mvc:interceptors>
+
+
 </beans>

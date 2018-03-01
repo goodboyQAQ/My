@@ -2,9 +2,9 @@ package com.async;
 
 import java.util.List;
 
+import com.async.EventType;
+
 public interface EventHandler {
-	void doHandle(EventModel model);
-	
+	void doHandler(EventModel eventModel);
 	List<EventType> getSupportEventTypes();
-	
 }

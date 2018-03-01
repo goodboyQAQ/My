@@ -4,7 +4,7 @@
 	
 <mapper namespace="com.dao.DicussDao">
 	
-	<insert id="save" parameterType="com.entity.Dicuss">
+	<insert id="save" parameterType="com.entity.Dicuss" keyProperty="id" useGeneratedKeys="true">
 		insert into dicuss(user_id,nick_name,user_img,opus_id,send_type,send_floor,msg,to_userid,to_nickname)
 		values(#{userId},#{nickName},#{userImg},#{opusId},#{sendType},#{sendFloor},#{msg},#{toUser},#{toNickName})
 	</insert>
@@ -48,7 +48,7 @@
 		where opus_id=#{opusId}
 			and send_type=1
 			and send_floor=#{sendFloor}
-		order by send_time DESC
+		order by id DESC
 		limit #{n},5
 	</select>
 	
@@ -57,6 +57,21 @@
 		from dicuss
 		where opus_id=#{opusId}
 	</select>
+	
+	<select id="findById" resultMap="dicussMap">
+		select *
+		from dicuss
+		where id=#{dicussId}
+	</select>
+	
+	<select id="findByFloor" resultMap="dicussMap">
+		select *
+		from dicuss
+		where opus_id=#{opusId} and
+			send_floor=#{sendFloor} and
+			send_type='0' 
+	</select>
+
 	
 	
 	<resultMap id="dicussMap" type="com.entity.Dicuss" >

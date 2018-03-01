@@ -15,4 +15,6 @@ public interface DicussDao {
 	public List<Map> maxdicuss0(@Param("opusId")int opusId,@Param("n")int n);
 	public List<Map> downreply(@Param("opusId")int opusId,@Param("sendFloor")int sendFloor,@Param("n")int n);
 	public Integer floor(@Param("opusId")Integer opusId);
+	public Dicuss findById(@Param("dicussId")int dicussId);
+	public Dicuss findByFloor(@Param("opusId")int opusId,@Param("sendFloor")int sendFloor);
 }

@@ -7,6 +7,9 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.async.EventModel;
+import com.async.EventProducer;
+import com.async.EventType;
 import com.dao.DicussDao;
 import com.entity.Dicuss;
 import com.entity.Result;
@@ -16,6 +19,8 @@ public class DicussServiceImpl implements DicussService{
 	
 	@Resource
 	private DicussDao dicussDao;
+	@Resource
+	private EventProducer eventProducer;
 	
 	public Result addDicuss(int userId,String nickName,String userImg,int opusId,String sendType,int sendFloor,String msg,Integer toUser,String toNickName){
 		Dicuss dicuss=new Dicuss();
@@ -28,8 +33,16 @@ public class DicussServiceImpl implements DicussService{
 		dicuss.setMsg(msg);
 		dicuss.setToUser(toUser);
 		dicuss.setToNickName(toNickName);
-		dicuss.toString();
 		dicussDao.save(dicuss);
+		int entityId=dicuss.getId();
+		if(sendType!="0"){
+			if(toUser==null){
+				dicuss=dicussDao.findByFloor(opusId, sendFloor);	
+				toUser=dicuss.getUserId();
+			}
+			eventProducer.fireEvent(new EventModel(EventType.COMMENT).setActorId(userId).setEntityId(entityId).setEntityOwnerId(toUser));
+		}
+		
 		Result result=new Result();
 		result.setStatus(0);
 		result.setMsg("插入评论成功");
@@ -85,6 +98,28 @@ public class DicussServiceImpl implements DicussService{
 		result.setData(num);
 		return result;
 	}
+
+
+	public Result findById(int dicussId) {
+		Dicuss dicuss=dicussDao.findById(dicussId);
+		Result result=new Result();
+		result.setData(dicuss);
+		result.setMsg("查找成功");
+		result.setStatus(0);
+		return result;
+	}
+
+
+	public Result findByFloor(int opusId, int sendFloor) {
+		Dicuss dicuss=dicussDao.findByFloor(opusId, sendFloor);
+		Result result=new Result();
+		result.setData(dicuss);
+		result.setMsg("查找成功");
+		result.setStatus(0);
+		return result;
+	}
+	
+	
 	
 	
 
